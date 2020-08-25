@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken")
 const tokenSecretKey = process.env.JWT_SECRET_KEY || "s0m3s3cre7"
 
 exports.findAllUsers = (req,res) =>{
-    db.execute(`SELECT * from users`).then(doc=>{
+    db.execute(`SELECT idusers,email,username from users`).then(doc=>{
         res.send(doc[0])
     })
 }
@@ -12,14 +12,7 @@ exports.findAllUsers = (req,res) =>{
 exports.findUserByUsername = (req,res) =>{
     let username = req.params.username
     db.execute(`SELECT * from users WHERE username='${username}'`).then(doc=>{
-        res.send(doc[0])
-    })
-}
-
-exports.findUserByUsername = (req,res) =>{
-    let username = req.params.username
-    db.execute(`SELECT * from users WHERE username='${username}'`).then(doc=>{
-        res.send(doc[0])
+        res.send(doc[0][0])
     })
 }
 
@@ -29,7 +22,7 @@ exports.register = (req,res) =>{
     let email = req.body.email
     db.execute(`INSERT INTO users.users (username,password,email) VALUES ('${username}', '${password}', '${email}');
     `).then(doc=>{
-        const token = jwt.sign({ doc: doc[0]}, tokenSecretKey, {
+        const token = jwt.sign({ doc: doc[0][0]}, tokenSecretKey, {
             expiresIn: 86400
         });
         res.send({
@@ -50,7 +43,7 @@ exports.login = (req,res) =>{
                 email:doc[0][0].email,
             }
             const token = jwt.sign({ user:user }, tokenSecretKey, {
-                expiresIn: 100
+                expiresIn: 86400
             });
             res.send({
                 token:token
