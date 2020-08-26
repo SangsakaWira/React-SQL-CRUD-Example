@@ -22,20 +22,31 @@ exports.register = (req,res) =>{
     let email = req.body.email
     db.execute(`INSERT INTO users.users (username,password,email) VALUES ('${username}', '${password}', '${email}');
     `).then(doc=>{
-        const token = jwt.sign({ doc: doc[0][0]}, tokenSecretKey, {
-            expiresIn: 86400
+        const token = jwt.sign({ user: doc[0][0]}, tokenSecretKey, {
+            expiresIn: 100
         });
         res.send({
+            msg:"success",
+            status:true,
             token:token
         })
     }).catch(err=>{
-        if(err) res.send(err)
+        if(err) res.send({
+            msg:err.message,
+            status:false,
+            token:null
+        })
     })
 }
 
 exports.login = (req,res) =>{
     let username = req.body.username
+    console.log(req.body)
     db.execute(`SELECT idusers,username,email,password FROM users WHERE username='${username}'`).then(doc=>{
+        console.log(doc[0].length == 0)
+        if(doc[0].length == 0) return res.send({
+            msg:"No User Found!"
+        })
         if(bcryptjs.compareSync(req.body.password,doc[0][0].password)){
             let user = {
                 id:doc[0][0].idusers,
@@ -43,9 +54,11 @@ exports.login = (req,res) =>{
                 email:doc[0][0].email,
             }
             const token = jwt.sign({ user:user }, tokenSecretKey, {
-                expiresIn: 86400
+                expiresIn: 100
             });
             res.send({
+                msg:"success",
+                status:true,
                 token:token
             })
         }else{

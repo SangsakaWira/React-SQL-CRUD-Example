@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import axios from 'axios'
+import {Link} from 'react-router-dom'
 import host from '../api/host'
 
 function Register() {
@@ -46,6 +47,7 @@ function Register() {
             console.log(doc.data)
             if(doc.data.status){
                 localStorage.setItem('token',doc.data.token)
+                window.location.href = "./";
             }else{
                 setShow({
                     msg:doc.data.msg,
@@ -68,6 +70,7 @@ function Register() {
           <br></br>
           <button>Submit</button>
       </form>
+      <Link to="login">login</Link>
       {showError()}
     </div>
   );
