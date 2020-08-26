@@ -7,6 +7,7 @@ import PrivateRoute from './components/PrivateRoute'
 import Login from './pages/Login'
 import App from './pages/App';
 import Register from './pages/Register';
+import SingleItem from './pages/SingleItem'
 
 function AppRouter() {
 
@@ -35,6 +36,7 @@ function AppRouter() {
             <PrivateRoute path="/" exact component={App} ></PrivateRoute>
             <Route path="/login" component={Login} ></Route>
             <Route path="/register" component={Register} ></Route>
+            <PrivateRoute path="/item/:id" component={SingleItem} ></PrivateRoute>
         </Switch>
     </Router>
   );
