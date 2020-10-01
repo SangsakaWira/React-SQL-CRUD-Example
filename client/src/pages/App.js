@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react';
+import React,{useEffect,useRef} from 'react';
 import {useStateIfMounted} from 'use-state-if-mounted'
 import axios from 'axios';
 
@@ -7,12 +7,21 @@ import host from '../api/host'
 
 
 function App() {
-
+  let filePickerFile = useRef()
   let [items,setItems] = useStateIfMounted([])
   let [item,setItem] = useStateIfMounted({
     item_name:"",
     quantity:""
   })
+  let [file,setFile] = useStateIfMounted()
+
+  const pickImageHandler = () =>{
+    filePickerFile.current.click()
+  }
+
+  const pickHandler = (event) =>{
+    setFile(event.target.files[0])
+  }
 
   useEffect(()=>{
     axios.get(`${host}/item/read`).then(doc=>{
@@ -25,11 +34,11 @@ function App() {
     window.location.href = "./login";
   }
   const onSubmit = (event) =>{
-    axios.post(`${host}/item/create`,item,{
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).then(doc=>{
+    let formData = new FormData()
+    formData.append('item_name',item.item_name)
+    formData.append('quantity',item.quantity)
+    formData.append('image',file)
+    axios.post(`${host}/item/create`,formData).then(doc=>{
       console.log(doc)
     })
     event.preventDefault()
@@ -48,6 +57,8 @@ function App() {
       <h1 > Tambah Item </h1>
       <form onSubmit={onSubmit} >
         <input onChange={handleOnChange} name="item_name" type="text" placeholder="Nama Item"></input>
+        <br></br>
+        <input onChange={pickHandler} name="photo" accept=".jpg,.png,.jpeg" type="file" placeholder="Photo"></input>
         <br></br>
         <input onChange={handleOnChange} name="quantity" type="text" placeholder="Quantity"></input>
         <br></br>

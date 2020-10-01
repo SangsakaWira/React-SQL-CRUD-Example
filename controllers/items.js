@@ -3,6 +3,8 @@ const db = require("../config/database")
 exports.create = (req,res) =>{
     let item_name = req.body.item_name
     let quantity = req.body.quantity
+    let photo = req.file
+    console.log(photo)
     db.execute(`INSERT INTO users.items (item_name,quantity) VALUES ('${item_name}', '${quantity}');
     `).then(doc=>{
         res.send({
