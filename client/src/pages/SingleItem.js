@@ -8,12 +8,13 @@ import host from '../api/host'
 function App(props) {
     let [item, setItem] = useStateIfMounted({
         item_name: "",
-        quantity: ""
+        quantity: "",
+        photo:""
     })
 
     useEffect(() => {
         axios.get(`${host}/item/read/${props.match.params.id}`).then(doc => {
-            console.log()
+            console.log(doc)
             if(!doc.data.doc) {
                 setItem({
                     ...item,
@@ -23,8 +24,9 @@ function App(props) {
             }else{
                 setItem({
                     ...item,
-                    item_name:doc.data.doc.item_name,
-                    quantity:doc.data.doc.quantity
+                    item_name:doc.data.doc[0].item_name,
+                    quantity:doc.data.doc[0].quantity,
+                    photo:doc.data.doc[0].photo
                 })
             }
         })
@@ -40,6 +42,8 @@ function App(props) {
         <div className="App">
             <h1>Single Item</h1>
             <p>{props.match.params.id}</p>
+            <p>{item.photo}</p>
+            <img src={item.photo} style={{width:"30%"}}></img>
             <p>{item.item_name}</p>
             <p>{item.quantity}</p>
             <button onClick={deleteItem}>Delete Item</button>

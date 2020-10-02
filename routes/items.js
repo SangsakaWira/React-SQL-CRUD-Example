@@ -34,5 +34,7 @@ storage = multer.diskStorage({
 
 router.post("/create",multer({storage: storage,fileFilter:fileFilter}).single('image'),itemController.create)
 router.get("/read",itemController.read)
+router.get("/read/:id",itemController.readById)
+router.get("/delete/:id",itemController.delete)
 
 module.exports = router
