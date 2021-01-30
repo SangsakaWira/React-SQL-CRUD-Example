@@ -1,2 +1,2 @@
-docker run --name sqlserver1 -e MYSQL_ROOT_PASSWORD=my-secret-pw -p 5555:3306 -d mysql
-docker container start sqlserver1
+docker run --name sqlserver2 -e MYSQL_ROOT_PASSWORD=yoursecret -p 3333:3306 -d mysql
+docker container start sqlserver2
